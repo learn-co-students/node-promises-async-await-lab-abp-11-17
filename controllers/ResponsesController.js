@@ -21,10 +21,11 @@ ResponsesController.Update = async function(req, res, next){
 }
 
 ResponsesController.Show = async function(req, res, next){
-  // let icebreaker = await IceBreaker.FindBySecret(req.query.secret);
-  // let icebreakerResponses = await icebreaker.responses();
-  let data = {} // {icebreaker: icebreaker, question: question, iceBreakerResponse: iceBreakerResponse}
-  res.render("responses/show", data) 
+  let icebreaker = await IceBreaker.FindBySecret(req.query.secret);
+  let icebreakerResponses = await icebreaker.responses();
+  let question = await icebreaker.question();
+
+  res.render("responses/show", {icebreaker: icebreaker, question: question, icebreakerResponses: icebreakerResponses}) 
 }
 
 module.exports = ResponsesController

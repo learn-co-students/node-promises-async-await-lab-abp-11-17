@@ -28,6 +28,7 @@ class IceBreakerResponse {
         rows.forEach(function(row){
           let response = new IceBreakerResponse(row.icebreakerID, row.questionID, row.email, row.secret);
           response.id = row.id;
+          response.responseText = row.response_text;
           results.push(response)
         })
 

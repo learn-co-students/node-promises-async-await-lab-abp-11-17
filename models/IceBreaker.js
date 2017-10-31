@@ -77,6 +77,11 @@ class IceBreaker {
     const IceBreakerResponse = require('./IceBreakerResponse');
     return IceBreakerResponse.FindAllByIceBreakerID(this.id);
   }
+
+  question(){
+    const Question = require('./Question');
+    return Question.Find(this.questionID)
+  }
 }
 
 module.exports = IceBreaker
