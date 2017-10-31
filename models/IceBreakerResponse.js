@@ -1,6 +1,6 @@
 let db = require("../config/db");
 
-// const Question = require('./Question');
+const Question = require('./Question');
 const IceBreaker = require('./IceBreaker');
 
 class IceBreakerResponse {

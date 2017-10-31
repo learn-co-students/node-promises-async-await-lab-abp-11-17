@@ -2,7 +2,7 @@ let db = require("../config/db");
 let crypto = require('crypto');
 
 const IceBreakerResponse = require('./IceBreakerResponse');
-const Question = require('./Question');
+// const Question = require('./Question');
 
 class IceBreaker {
   static CreateTable(){

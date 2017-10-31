@@ -24,3 +24,4 @@ extracting loading of modules
 db app wide / not having to require all the time
 better pry debugger in controllers
 how to build a console
+seemingly circuluar require problem with models loading each other?

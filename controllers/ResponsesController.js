@@ -5,9 +5,9 @@ const IceBreakerResponse = require('../models/IceBreakerResponse');
 
 ResponsesController.Edit = async function(req, resp, next){
  let iceBreakerResponse = await IceBreakerResponse.FindBySecret(req.query.secret)
- // let question = await iceBreakerResponse.question();
+ let question = await iceBreakerResponse.question();
 
- resp.render("responses/edit", {})
+ resp.render("responses/edit", {question: question})
 }
 
 ResponsesController.Update = async function(req, resp, next){
