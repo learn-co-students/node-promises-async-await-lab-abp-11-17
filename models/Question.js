@@ -1,4 +1,5 @@
 let db = require("../config/db");
+
 const IceBreakerResponse = require('./IceBreakerResponse');
 const IceBreaker = require('./IceBreaker');
 
@@ -49,7 +50,6 @@ class Question {
   }
 
   constructor(content) {
-    // If it is, use it to initialize "this" date
     this.content = content;
   }
 
