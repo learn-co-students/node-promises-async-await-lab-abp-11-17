@@ -36,6 +36,7 @@ IceBreakerResponse.CreateTable()
 // Mount Controllers
 const QuestionsController = require('./controllers/QuestionsController');
 const IceBreakersController = require('./controllers/IceBreakersController');
+const ResponsesController = require('./controllers/ResponsesController');
 
 // Routing Engine
 app.get('/', QuestionsController.Index);
@@ -44,6 +45,8 @@ app.post('/questions', QuestionsController.Create);
 app.get('/icebreakers/new', IceBreakersController.New);
 app.post('/icebreakers', IceBreakersController.Create);
 app.get('/icebreakers', IceBreakersController.Show);
+app.get('/responses/new', ResponsesController.Edit);
+app.post('/responses', ResponsesController.Update);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,5 +1,8 @@
 let db = require("../config/db");
 
+// const Question = require('./Question');
+const IceBreaker = require('./IceBreaker');
+
 class IceBreakerResponse {
   
   static CreateTable(){
@@ -37,6 +40,21 @@ class IceBreakerResponse {
     return query;
   }
 
+  static FindBySecret(secret){
+    let query = new Promise(function(resolve, reject){
+      let sql = `SELECT * FROM icebreaker_responses WHERE secret = ?`;
+
+      db.get(sql, secret, function(err, row){
+        let response = new IceBreakerResponse(row.icebreakerID, row.questionID, row.email, row.secret);
+        response.id = row.id;
+
+        resolve(response)
+      })
+    })
+
+    return query;
+  }  
+
   constructor(icebreakerID, questionID, email, secret) {
     this.icebreakerID = icebreakerID;
     this.questionID = questionID;
@@ -47,6 +65,10 @@ class IceBreakerResponse {
   insert(){
     db.run(`INSERT INTO icebreaker_responses (icebreakerID, questionID, email, secret) 
       VALUES (?,?,?,?)`, this.icebreakerID, this.questionID, this.email, this.secret)
+  }
+
+  question(){
+    return Question.Find(this.questionID)
   }
 }
 
