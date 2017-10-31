@@ -2,15 +2,10 @@ const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
-// const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const exitHook = require('exit-hook');
 
 const app = express();
-
-// Load the Database
-// const db = require('./config/db');
-// app.db = db;
 
 // view engine setups
 app.set('views', path.join(__dirname, 'views'));
@@ -82,6 +77,8 @@ app.use(function(err, req, res, next) {
 // exitHook(function(){
 //   console.log("Exiting application server, goodbye!")
 // })
-// 
+//
 
 module.exports = app;
+
+debugger;
