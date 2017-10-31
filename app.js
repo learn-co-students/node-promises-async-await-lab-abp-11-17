@@ -7,10 +7,9 @@ var bodyParser = require('body-parser');
 var exitHook = require('exit-hook');
 
 var app = express();
-var router = express.Router();
 
 // Load the Database
-app.db = require('./db')
+const db = require('./config/db');
 
 // view engine setups
 app.set('views', path.join(__dirname, 'views'));
@@ -76,6 +75,5 @@ exitHook(function(){
 exitHook(function(){
   console.log("Exiting application server, goodbye!")
 })
-
 
 module.exports = app;

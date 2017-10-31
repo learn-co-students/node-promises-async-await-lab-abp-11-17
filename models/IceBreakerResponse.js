@@ -1,4 +1,4 @@
-var db = require("../db")
+let db = require("../config/db");
 
 class IceBreakerResponse {
   constructor(icebreakerID, questionID, email, secret) {

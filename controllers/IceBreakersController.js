@@ -20,10 +20,7 @@ IceBreakersController.Create = async function(req, res, next){
 IceBreakersController.Show = async function(req, res, next){
   let icebreaker = await IceBreaker.findBySecret(req.query.secret);
   let icebreakerResponses = await icebreaker.responses();
-    
-  console.log(icebreaker)    
-  console.log(icebreakerResponses)
-  
+      
   res.render("icebreakers/show", {icebreaker: icebreaker, icebreakerResponses: icebreakerResponses})    
 }
 

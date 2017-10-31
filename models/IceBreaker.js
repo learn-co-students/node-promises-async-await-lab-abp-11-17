@@ -1,5 +1,5 @@
-var db = require("../db")
-let crypto = require('crypto')
+let db = require("../config/db");
+let crypto = require('crypto');
 const IceBreakerResponse = require('./IceBreakerResponse');
 
 class IceBreaker {

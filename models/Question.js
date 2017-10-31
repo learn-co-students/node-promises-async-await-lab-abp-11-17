@@ -1,4 +1,4 @@
-var db = require("../db")
+let db = require("../config/db");
 const IceBreakerResponse = require('./IceBreakerResponse');
 const IceBreaker = require('./IceBreaker');
 
