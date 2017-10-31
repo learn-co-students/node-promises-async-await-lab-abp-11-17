@@ -4,12 +4,13 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
-// var index = require('./routes/index');
-// var users = require('./routes/users');
+var exitHook = require('exit-hook');
 
 var app = express();
 var router = express.Router();
+
+// Load the Database
+app.db = require('./db')
 
 // view engine setups
 app.set('views', path.join(__dirname, 'views'));
@@ -23,11 +24,27 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use('/', index);
-const QuestionsController = require('./controllers/QuestionsController');
-app.get('/', QuestionsController);
+// Load Models
+const Question = require('./models/Question');
+const IceBreaker = require('./models/IceBreaker');
+const IceBreakerResponse = require('./models/IceBreakerResponse');
 
-// app.use('/users', users);
+// Run Migrations
+Question.createTable()
+IceBreaker.createTable()
+IceBreakerResponse.createTable()
+
+// Mount Controllers
+const QuestionsController = require('./controllers/QuestionsController');
+const IceBreakersController = require('./controllers/IceBreakersController');
+
+// Routing Engine
+app.get('/', QuestionsController.Index);
+app.get('/questions/new', QuestionsController.New);
+app.post('/questions', QuestionsController.Create);
+app.get('/icebreakers/new', IceBreakersController.New);
+app.post('/icebreakers', IceBreakersController.Create);
+app.get('/icebreakers', IceBreakersController.Show);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -46,5 +63,19 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+exitHook(function(){
+  app.db.close(function(err){
+    if (err) {
+      console.error(err.message);
+    }
+    console.log('Close the database connection.');
+  });
+});
+
+exitHook(function(){
+  console.log("Exiting application server, goodbye!")
+})
+
 
 module.exports = app;

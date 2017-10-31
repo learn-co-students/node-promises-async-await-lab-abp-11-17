@@ -10,8 +10,12 @@
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "ejs": "~2.5.7",
+    "exit-hook": "^1.1.1",
     "express": "~4.15.5",
+    "express-livereload": "0.0.24",
     "morgan": "~1.9.0",
-    "serve-favicon": "~2.4.5"
+    "pryjs": "^1.0.3",
+    "serve-favicon": "~2.4.5",
+    "sqlite3": "^3.1.13"
   }
 }
