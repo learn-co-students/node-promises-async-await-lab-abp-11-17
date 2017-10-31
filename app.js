@@ -29,9 +29,9 @@ const IceBreaker = require('./models/IceBreaker');
 const IceBreakerResponse = require('./models/IceBreakerResponse');
 
 // Run Migrations
-Question.createTable()
-IceBreaker.createTable()
-IceBreakerResponse.createTable()
+Question.CreateTable()
+IceBreaker.CreateTable()
+IceBreakerResponse.CreateTable()
 
 // Mount Controllers
 const QuestionsController = require('./controllers/QuestionsController');

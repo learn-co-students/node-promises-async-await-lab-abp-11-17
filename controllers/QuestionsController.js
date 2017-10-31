@@ -2,7 +2,7 @@ const QuestionsController = {}
 const Question = require('../models/Question');
 
 QuestionsController.Index = async function(req, res, next) {
-  let questions = await Question.all()
+  let questions = await Question.All()
   res.render('questions/index', {questions: questions});
 }
 

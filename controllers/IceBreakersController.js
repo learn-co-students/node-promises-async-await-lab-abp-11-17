@@ -3,13 +3,13 @@ const Question = require('../models/Question');
 const IceBreaker = require('../models/IceBreaker');
 
 IceBreakersController.New = async function(req, res, next) {
-  let question = await Question.find(req.query.questionID)
+  let question = await Question.Find(req.query.questionID)
 
   res.render('icebreakers/new', {question: question});  
 }
 
 IceBreakersController.Create = async function(req, res, next){
-  let question = await Question.find(req.query.questionID)
+  let question = await Question.Find(req.query.questionID)
   let icebreaker = new IceBreaker(question.id, req.body.icebreakerEmails)
     
   await icebreaker.save()
@@ -18,7 +18,7 @@ IceBreakersController.Create = async function(req, res, next){
 }
 
 IceBreakersController.Show = async function(req, res, next){
-  let icebreaker = await IceBreaker.findBySecret(req.query.secret);
+  let icebreaker = await IceBreaker.FindBySecret(req.query.secret);
   let icebreakerResponses = await icebreaker.responses();
       
   res.render("icebreakers/show", {icebreaker: icebreaker, icebreakerResponses: icebreakerResponses})    

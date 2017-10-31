@@ -3,6 +3,33 @@ let crypto = require('crypto');
 const IceBreakerResponse = require('./IceBreakerResponse');
 
 class IceBreaker {
+  static CreateTable(){
+    let sql = `
+      CREATE TABLE IF NOT EXISTS icebreakers (
+        id INTEGER PRIMARY KEY, 
+        questionID INTEGER,
+        secret TEXT
+      )
+    `
+
+    db.run(sql)
+  }
+
+  static FindBySecret(secret){
+    let query = new Promise(function(resolve, reject){
+      let sql = `SELECT * FROM icebreakers WHERE secret = ?`;
+
+      db.get(sql, secret, function(err, row){
+        let icebreaker = new IceBreaker(row.questionID);
+        icebreaker.id = row.id;
+
+        resolve(icebreaker)
+      })
+    })
+
+    return query;
+  }  
+
   constructor(questionID, emails) {
     this.questionID = questionID;
     this.emails = emails;
@@ -31,35 +58,8 @@ class IceBreaker {
   }
 
   responses(){
-    return IceBreakerResponse.findAllByIceBreakerID(this.id);
+    return IceBreakerResponse.FindAllByIceBreakerID(this.id);
   }
-}
-
-IceBreaker.createTable = function(){
-  let sql = `
-    CREATE TABLE IF NOT EXISTS icebreakers (
-      id INTEGER PRIMARY KEY, 
-      questionID INTEGER,
-      secret TEXT
-    )
-  `
-
-  db.run(sql)
-}
-
-IceBreaker.findBySecret = function(secret){
-  let query = new Promise(function(resolve, reject){
-    let sql = `SELECT * FROM icebreakers WHERE secret = ?`;
-
-    db.get(sql, secret, function(err, row){
-      let icebreaker = new IceBreaker(row.questionID);
-      icebreaker.id = row.id;
-
-      resolve(icebreaker)
-    })
-  })
-
-  return query;
 }
 
 module.exports = IceBreaker
