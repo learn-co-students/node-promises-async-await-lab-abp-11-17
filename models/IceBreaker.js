@@ -49,18 +49,18 @@ IceBreaker.createTable = function(){
 }
 
 IceBreaker.findBySecret = function(secret){
-  let query = new Promise(function(resolve, reject){
+  // let query = new Promise(function(resolve, reject){
     let sql = `SELECT * FROM icebreakers WHERE secret = ?`;
 
-    db.get(sql, secret, function(err, row){
+    return db.get(sql, secret, function(err, row){
       let icebreaker = new IceBreaker(row.questionID);
       icebreaker.id = row.id;
 
-      resolve(icebreaker)
+      return icebreaker
     })
-  })
+  // })
 
-  return query;
+  // return query;
 }
 
 module.exports = IceBreaker
