@@ -1,8 +1,4 @@
-let db = require("../config/db");
-
-// Turning Either of These On Breaks App.
-// const IceBreakerResponse = require('./IceBreakerResponse');
-// const IceBreaker = require('./IceBreaker');
+let db = require("../config/db")
 
 class Question {
 

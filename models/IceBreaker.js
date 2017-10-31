@@ -1,9 +1,6 @@
 let db = require("../config/db");
 let crypto = require('crypto');
 
-const IceBreakerResponse = require('./IceBreakerResponse');
-// const Question = require('./Question');
-
 class IceBreaker {
   static CreateTable(){
     let sql = `
@@ -53,6 +50,8 @@ class IceBreaker {
   }
 
   save(){
+    const IceBreakerResponse = require('./IceBreakerResponse');
+
     let self = this;
     let insert = new Promise(function(resolve, reject){
       let iceBreakerResponses = [];
@@ -75,6 +74,7 @@ class IceBreaker {
   }
 
   responses(){
+    const IceBreakerResponse = require('./IceBreakerResponse');
     return IceBreakerResponse.FindAllByIceBreakerID(this.id);
   }
 }

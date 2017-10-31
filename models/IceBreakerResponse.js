@@ -1,7 +1,4 @@
 let db = require("../config/db");
-
-// const IceBreaker = require('./IceBreaker');
-const Question = require('./Question');
 const pry = require('pryjs')
 
 class IceBreakerResponse {
@@ -74,12 +71,12 @@ class IceBreakerResponse {
   }
 
   question(){
+    const Question = require('./Question');
     return Question.Find(this.questionID)
   }
 
   icebreaker(){
     const IceBreaker = require('./IceBreaker');
-
     return IceBreaker.Find(this.icebreakerID)
   }
 }
