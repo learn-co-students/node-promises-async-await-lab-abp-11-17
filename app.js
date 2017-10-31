@@ -8,8 +8,10 @@ var exitHook = require('exit-hook');
 
 var app = express();
 
+// --- Start Config
 // Load the Database
 const db = require('./config/db');
+app.db = db;
 
 // view engine setups
 app.set('views', path.join(__dirname, 'views'));
@@ -22,31 +24,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Load Models
-const Question = require('./models/Question');
-const IceBreaker = require('./models/IceBreaker');
-const IceBreakerResponse = require('./models/IceBreakerResponse');
-
-// Run Migrations
-Question.CreateTable()
-IceBreaker.CreateTable()
-IceBreakerResponse.CreateTable()
-
-// Mount Controllers
-const QuestionsController = require('./controllers/QuestionsController');
-const IceBreakersController = require('./controllers/IceBreakersController');
-const ResponsesController = require('./controllers/ResponsesController');
-
-// Routing Engine
-app.get('/', QuestionsController.Index);
-app.get('/questions/new', QuestionsController.New);
-app.post('/questions', QuestionsController.Create);
-app.get('/icebreakers/new', IceBreakersController.New);
-app.post('/icebreakers', IceBreakersController.Create);
-app.get('/icebreakers', IceBreakersController.Show);
-app.get('/responses/new', ResponsesController.Edit);
-app.post('/responses', ResponsesController.Update);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -78,5 +55,31 @@ exitHook(function(){
 exitHook(function(){
   console.log("Exiting application server, goodbye!")
 })
+// --- End Config
+
+// Load Models
+const Question = require('./models/Question');
+const IceBreaker = require('./models/IceBreaker');
+const IceBreakerResponse = require('./models/IceBreakerResponse');
+
+// Run Migrations
+Question.CreateTable()
+IceBreaker.CreateTable()
+IceBreakerResponse.CreateTable()
+
+// Mount Controllers
+const QuestionsController = require('./controllers/QuestionsController');
+const IceBreakersController = require('./controllers/IceBreakersController');
+const ResponsesController = require('./controllers/ResponsesController');
+
+// Routing Engine
+app.get('/', QuestionsController.Index);
+app.get('/questions/new', QuestionsController.New);
+app.post('/questions', QuestionsController.Create);
+app.get('/icebreakers/new', IceBreakersController.New);
+app.post('/icebreakers', IceBreakersController.Create);
+app.get('/icebreakers', IceBreakersController.Show);
+app.get('/responses/new', ResponsesController.Edit);
+app.post('/responses', ResponsesController.Update);
 
 module.exports = app;

@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
-var app = require('../app');
-var debug = require('debug')('icebreaker-simple:server');
+const Question = require('../models/Question');
+const IceBreaker = require('../models/IceBreaker');
+const IceBreakerResponse = require('../models/IceBreakerResponse');
 
-const Question = require('./models/Question');
+var debug = require('debug')('icebreaker-simple:server');
 
 pry = require('pryjs')
 eval(pry.it)
