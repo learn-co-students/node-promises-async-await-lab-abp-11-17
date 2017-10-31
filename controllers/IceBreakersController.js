@@ -1,6 +1,7 @@
 const IceBreakersController = {}
 const Question = require('../models/Question');
 const IceBreaker = require('../models/IceBreaker');
+const IceBreakerResponse = require('../models/IceBreakerResponse');
 
 IceBreakersController.New = async function(req, res, next) {
   let question = await Question.Find(req.query.questionID)

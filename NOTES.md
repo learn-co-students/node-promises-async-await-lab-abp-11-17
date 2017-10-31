@@ -43,3 +43,8 @@ TODO
 8. secrets
 9. twilio / email integration
 10. video integration
+
+Considerations:
+
+1. Instead of relational functions on objects like icebreaker.question() consider Question.FindByIceBreaker(icebreaker).
+2. Consider a Model export that contains the other constants.

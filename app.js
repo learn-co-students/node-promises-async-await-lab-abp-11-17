@@ -1,16 +1,16 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var exitHook = require('exit-hook');
+const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+// const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const exitHook = require('exit-hook');
 
-var app = express();
+const app = express();
 
 // Load the Database
-const db = require('./config/db');
-app.db = db;
+// const db = require('./config/db');
+// app.db = db;
 
 // view engine setups
 app.set('views', path.join(__dirname, 'views'));
@@ -21,7 +21,7 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+// app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Load Models
@@ -30,9 +30,11 @@ const IceBreaker = require('./models/IceBreaker');
 const IceBreakerResponse = require('./models/IceBreakerResponse');
 
 // Run Migrations
-Question.CreateTable()
-IceBreaker.CreateTable()
-IceBreakerResponse.CreateTable()
+(async function(){
+  await Question.CreateTable()
+  await IceBreaker.CreateTable()
+  await IceBreakerResponse.CreateTable()
+})()
 
 // Mount Controllers
 const QuestionsController = require('./controllers/QuestionsController');
@@ -68,18 +70,18 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-exitHook(function(){
-  app.db.close(function(err){
-    if (err) {
-      console.error(err.message);
-    }
-    console.log('Close the database connection.');
-  });
-});
+// exitHook(function(){
+//   app.db.close(function(err){
+//     if (err) {
+//       console.error(err.message);
+//     }
+//     console.log('Close the database connection.');
+//   });
+// });
 
-exitHook(function(){
-  console.log("Exiting application server, goodbye!")
-})
+// exitHook(function(){
+//   console.log("Exiting application server, goodbye!")
+// })
 // 
 
 module.exports = app;

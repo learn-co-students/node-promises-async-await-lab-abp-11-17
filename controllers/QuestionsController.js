@@ -1,5 +1,7 @@
 const QuestionsController = {}
 const Question = require('../models/Question');
+const IceBreaker = require('../models/IceBreaker');
+const IceBreakerResponse = require('../models/IceBreakerResponse');
 
 QuestionsController.Index = async function(req, res, next) {
   let questions = await Question.All()
