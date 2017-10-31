@@ -4,7 +4,6 @@ const IceBreakerResponse = require('./IceBreakerResponse');
 
 class IceBreaker {
   constructor(questionID, emails) {
-    // If it is, use it to initialize "this" date
     this.questionID = questionID;
     this.emails = emails;
   }
@@ -49,18 +48,18 @@ IceBreaker.createTable = function(){
 }
 
 IceBreaker.findBySecret = function(secret){
-  // let query = new Promise(function(resolve, reject){
+  let query = new Promise(function(resolve, reject){
     let sql = `SELECT * FROM icebreakers WHERE secret = ?`;
 
-    return db.get(sql, secret, function(err, row){
+    db.get(sql, secret, function(err, row){
       let icebreaker = new IceBreaker(row.questionID);
       icebreaker.id = row.id;
 
-      return icebreaker
+      resolve(icebreaker)
     })
-  // })
+  })
 
-  // return query;
+  return query;
 }
 
 module.exports = IceBreaker

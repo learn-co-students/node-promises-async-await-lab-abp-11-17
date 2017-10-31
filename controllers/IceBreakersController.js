@@ -2,24 +2,19 @@ const IceBreakersController = {}
 const Question = require('../models/Question');
 const IceBreaker = require('../models/IceBreaker');
 
-IceBreakersController.New = function(req, res, next) {
-  Question.find(req.query.questionID).then(function(question){
+IceBreakersController.New = async function(req, res, next) {
+  let question = await Question.find(req.query.questionID)
 
-    res.render('icebreakers/new', {question: question});  
-  })
+  res.render('icebreakers/new', {question: question});  
 }
 
-IceBreakersController.Create = function(req, res, next){
-  Question.find(req.query.questionID).then(function(question){
-    let icebreaker = new IceBreaker(question.id, req.body.icebreakerEmails)
-    // this sucks
-    icebreaker.save().then(function(icebreaker, icebreakerResponses){
-      console.log(icebreakerResponses)
-      console.log(icebreaker)
-
-      res.redirect(`/icebreakers?secret=${icebreaker.secret}`)
-    })    
-  })
+IceBreakersController.Create = async function(req, res, next){
+  let question = await Question.find(req.query.questionID)
+  let icebreaker = new IceBreaker(question.id, req.body.icebreakerEmails)
+    
+  await icebreaker.save()
+  
+  res.redirect(`/icebreakers?secret=${icebreaker.secret}`)
 }
 
 IceBreakersController.Show = async function(req, res, next){
