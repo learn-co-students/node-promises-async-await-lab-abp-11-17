@@ -30,7 +30,22 @@ class IceBreaker {
     })
 
     return query;
-  }  
+  }
+
+  static Find(id){
+    let query = new Promise(function(resolve, reject){
+      let sql = `SELECT * FROM icebreakers WHERE id = ?`;
+
+      db.get(sql, id, function(err, row){
+        let icebreaker = new IceBreaker(row.questionID);
+        icebreaker.id = row.id;
+        icebreaker.secret = row.secret;
+        resolve(icebreaker)
+      })
+    })
+
+    return query;
+  }    
 
   constructor(questionID, emails) {
     this.questionID = questionID;

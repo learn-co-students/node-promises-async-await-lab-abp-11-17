@@ -3,25 +3,28 @@ const Question = require('../models/Question');
 const IceBreaker = require('../models/IceBreaker');
 const IceBreakerResponse = require('../models/IceBreakerResponse');
 
-ResponsesController.Edit = async function(req, resp, next){
- let iceBreakerResponse = await IceBreakerResponse.FindBySecret(req.query.secret)
- let question = await iceBreakerResponse.question();
+ResponsesController.Edit = async function(req, res, next){
+  let iceBreakerResponse = await IceBreakerResponse.FindBySecret(req.query.secret)
+  let question = await iceBreakerResponse.question();
 
- resp.render("responses/edit", {question: question, iceBreakerResponse: iceBreakerResponse})
+  res.render("responses/edit", {question: question, iceBreakerResponse: iceBreakerResponse})
 }
 
-ResponsesController.Update = async function(req, resp, next){
- let iceBreakerResponse = await IceBreakerResponse.FindBySecret(req.query.secret)
- let question = await iceBreakerResponse.question();
+ResponsesController.Update = async function(req, res, next){
+  let iceBreakerResponse = await IceBreakerResponse.FindBySecret(req.query.secret)
+  let question = await iceBreakerResponse.question();
+  let icebreaker = await iceBreakerResponse.icebreaker();
 
-  resp.redirect("/responses", {question: question, iceBreakerResponse: iceBreakerResponse}) 
+  await iceBreakerResponse.updateResponseText(req.body.responseText)
+
+  res.redirect(`/responses?secret=${icebreaker.secret}`) 
 }
 
-ResponsesController.Show = async function(req, resp, next){
-  let icebreaker = await IceBreaker.FindBySecret(req.query.secret);
-  let icebreakerResponses = await icebreaker.responses();
-
-  resp.render("responses/show", {icebreaker: icebreaker, question: question, iceBreakerResponse: iceBreakerResponse}) 
+ResponsesController.Show = async function(req, res, next){
+  // let icebreaker = await IceBreaker.FindBySecret(req.query.secret);
+  // let icebreakerResponses = await icebreaker.responses();
+  let data = {} // {icebreaker: icebreaker, question: question, iceBreakerResponse: iceBreakerResponse}
+  res.render("responses/show", data) 
 }
 
 module.exports = ResponsesController

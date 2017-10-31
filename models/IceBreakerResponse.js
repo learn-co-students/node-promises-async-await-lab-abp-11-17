@@ -1,7 +1,8 @@
 let db = require("../config/db");
 
+// const IceBreaker = require('./IceBreaker');
 const Question = require('./Question');
-const IceBreaker = require('./IceBreaker');
+const pry = require('pryjs')
 
 class IceBreakerResponse {
   
@@ -67,8 +68,19 @@ class IceBreakerResponse {
       VALUES (?,?,?,?)`, this.icebreakerID, this.questionID, this.email, this.secret)
   }
 
+  updateResponseText(responseText){
+    this.responseText = responseText;
+    db.run("UPDATE icebreaker_responses SET response_text = ? WHERE id = ?", this.responseText, this.id)
+  }
+
   question(){
     return Question.Find(this.questionID)
+  }
+
+  icebreaker(){
+    const IceBreaker = require('./IceBreaker');
+
+    return IceBreaker.Find(this.icebreakerID)
   }
 }
 
