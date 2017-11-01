@@ -1,58 +1,56 @@
-let db = require("../config/db")
+'use strict';
+
+const db = require("../config/db")
 
 class Question {
-
-  static CreateTable(){
-    let sql = `
+  static CreateTable() {
+    const sql = `
       CREATE TABLE IF NOT EXISTS questions (
-        id INTEGER PRIMARY KEY, 
+        id INTEGER PRIMARY KEY,
         content TEXT
       )
-    `
+    `;
 
-    db.run(sql)
+    db.run(sql);
   }
 
-  static All(){
-    let query = new Promise(function(resolve, reject){
-      let sql = `SELECT * FROM questions`;
-      let results = [];
+  static All() {
+    return new Promise((resolve, reject) => {
+      const sql = `SELECT * FROM questions`;
 
-      db.all(sql, function(err, rows){
-        rows.forEach(function(row){
-          let question = new Question(row.content);
+      db.all(sql, [], (err, rows) => {
+        const results = rows.map(row => {
+          const question = new Question(row.content);
           question.id = row.id;
-          results.push(question)
-        })
 
-        resolve(results)
-      })        
-    })
+          return question;
+        });
 
-    return query;
+        resolve(results);
+      });
+    });
   }
 
-  static Find(id){
-    let query = new Promise(function(resolve, reject){
-      let sql = `SELECT * FROM questions WHERE id = ?`;
+  static Find(id) {
+    return new Promise((resolve, reject) => {
+      const sql = `SELECT * FROM questions WHERE id = ?`;
 
-      db.get(sql, id, function(err, row){
-        let question = new Question(row.content);
+      db.get(sql, [ id ], (err, row) => {
+        const question = new Question(row.content);
         question.id = row.id;
-        resolve(question)
-      })
-    })
 
-    return query;
+        resolve(question);
+      });
+    });
   }
 
   constructor(content) {
     this.content = content;
   }
 
-  save(){
-    db.run(`INSERT INTO questions (content) VALUES (?)`, this.content)
+  save() {
+    db.run(`INSERT INTO questions (content) VALUES (?)`, [ this.content ]);
   }
 }
 
-module.exports = Question
+module.exports = Question;

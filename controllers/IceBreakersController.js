@@ -1,28 +1,35 @@
-const IceBreakersController = {}
+'use strict';
+
+const IceBreakersController = {};
 const Question = require('../models/Question');
 const IceBreaker = require('../models/IceBreaker');
 const IceBreakerResponse = require('../models/IceBreakerResponse');
 
-IceBreakersController.New = async function(req, res, next) {
-  let question = await Question.Find(req.query.questionID)
+IceBreakersController.New = async function (req, res, next) {
+  const question = await Question.Find(req.query.questionID);
 
-  res.render('icebreakers/new', {question: question});  
-}
+  res.render('icebreakers/new', {
+    question: question
+  });
+};
 
-IceBreakersController.Create = async function(req, res, next){
-  let question = await Question.Find(req.query.questionID)
-  let icebreaker = new IceBreaker(question.id, req.body.icebreakerEmails)
-    
-  await icebreaker.save()
-  
-  res.redirect(`/icebreakers?secret=${icebreaker.secret}`)
-}
+IceBreakersController.Create = async function (req, res, next) {
+  const question = await Question.Find(req.query.questionID);
+  const iceBreaker = new IceBreaker(question.id, req.body.icebreakerEmails);
 
-IceBreakersController.Show = async function(req, res, next){
-  let icebreaker = await IceBreaker.FindBySecret(req.query.secret);
-  let icebreakerResponses = await icebreaker.responses();
-      
-  res.render("icebreakers/show", {icebreaker: icebreaker, icebreakerResponses: icebreakerResponses})    
-}
+  await iceBreaker.save();
 
-module.exports = IceBreakersController
+  res.redirect(`/icebreakers?secret=${ iceBreaker.secret }`);
+};
+
+IceBreakersController.Show = async function (req, res, next) {
+  const iceBreaker = await IceBreaker.FindBySecret(req.query.secret);
+  const iceBreakerResponses = await IceBreakerResponse.FindAllByIceBreakerID(iceBreaker.id);
+
+  res.render('icebreakers/show', {
+    iceBreaker: iceBreaker,
+    iceBreakerResponses: iceBreakerResponses
+  });
+};
+
+module.exports = IceBreakersController;

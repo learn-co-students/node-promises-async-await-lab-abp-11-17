@@ -1,31 +1,41 @@
-const ResponsesController = {}
+'use strict';
+
+const ResponsesController = {};
 const Question = require('../models/Question');
 const IceBreaker = require('../models/IceBreaker');
 const IceBreakerResponse = require('../models/IceBreakerResponse');
 
-ResponsesController.Edit = async function(req, res, next){
-  let iceBreakerResponse = await IceBreakerResponse.FindBySecret(req.query.secret)
-  let question = await iceBreakerResponse.question();
+ResponsesController.Edit = async function (req, res, next) {
+  const iceBreakerResponse = await IceBreakerResponse.FindBySecret(req.query.secret);
+  const iceBreaker = await IceBreaker.Find(iceBreakerResponse.iceBreakerID);
+  const question = await Question.Find(iceBreaker.questionID);
 
-  res.render("responses/edit", {question: question, iceBreakerResponse: iceBreakerResponse})
-}
+  res.render('responses/edit', {
+    question: question,
+    iceBreakerResponse: iceBreakerResponse
+  });
+};
 
-ResponsesController.Update = async function(req, res, next){
-  let iceBreakerResponse = await IceBreakerResponse.FindBySecret(req.query.secret)
-  let question = await iceBreakerResponse.question();
-  let icebreaker = await iceBreakerResponse.icebreaker();
+ResponsesController.Update = async function (req, res, next) {
+  const iceBreakerResponse = await IceBreakerResponse.FindBySecret(req.query.secret);
+  const iceBreaker = await IceBreaker.Find(iceBreakerResponse.iceBreakerID);
+  const question = await Question.Find(iceBreaker.questionID);
 
-  await iceBreakerResponse.updateResponseText(req.body.responseText)
+  await iceBreakerResponse.updateResponseText(req.body.responseText);
 
-  res.redirect(`/responses?secret=${icebreaker.secret}`) 
-}
+  res.redirect(`/responses?secret=${ iceBreaker.secret }`);
+};
 
-ResponsesController.Show = async function(req, res, next){
-  let icebreaker = await IceBreaker.FindBySecret(req.query.secret);
-  let icebreakerResponses = await icebreaker.responses();
-  let question = await icebreaker.question();
+ResponsesController.Show = async function (req, res, next) {
+  const iceBreaker = await IceBreaker.FindBySecret(req.query.secret);
+  const iceBreakerResponses = await IceBreakerResponse.FindAllByIceBreakerID(iceBreaker.id);
+  const question = await Question.Find(iceBreaker.questionID);
 
-  res.render("responses/show", {icebreaker: icebreaker, question: question, icebreakerResponses: icebreakerResponses}) 
-}
+  res.render('responses/show', {
+    iceBreaker: iceBreaker,
+    question: question,
+    iceBreakerResponses: iceBreakerResponses
+  });
+};
 
-module.exports = ResponsesController
+module.exports = ResponsesController;

@@ -1,85 +1,82 @@
-let db = require("../config/db");
-const pry = require('pryjs')
+'use strict';
+
+const db = require("../config/db");
 
 class IceBreakerResponse {
-  
-  static CreateTable(){
-    let sql = `
+  static CreateTable() {
+    const sql = `
       CREATE TABLE IF NOT EXISTS icebreaker_responses (
-        id INTEGER PRIMARY KEY, 
-        icebreakerID INTEGER,
-        questionID INTEGER,
+        id INTEGER PRIMARY KEY,
+        icebreaker_id INTEGER,
         email TEXT,
         secret TEXT,
         response_text TEXT,
         response_url TEXT
       )
-    `
+    `;
 
-    db.run(sql)
+    return db.run(sql);
   }
 
-  static FindAllByIceBreakerID(icebreakerID){
-    let query = new Promise(function(resolve, reject){
-      let sql = `SELECT * FROM icebreaker_responses WHERE icebreakerID = ?`;
-      let results = [];
+  static FindAllByIceBreakerID(iceBreakerID) {
+    return new Promise((resolve, reject) => {
+      const sql = `SELECT * FROM icebreaker_responses WHERE icebreaker_id = ?`;
 
-      db.all(sql, icebreakerID, function(err, rows){
-        rows.forEach(function(row){
-          let response = new IceBreakerResponse(row.icebreakerID, row.questionID, row.email, row.secret);
+      db.all(sql, iceBreakerID, (err, rows) => {
+        const results = rows.map(row => {
+          const response = new IceBreakerResponse(row.icebreaker_id, row.email, row.secret);
           response.id = row.id;
           response.responseText = row.response_text;
-          results.push(response)
-        })
+          return response;
+        });
 
-        resolve(results)
-      })        
-    })
-
-    return query;
+        resolve(results);
+      });
+    });
   }
 
-  static FindBySecret(secret){
-    let query = new Promise(function(resolve, reject){
-      let sql = `SELECT * FROM icebreaker_responses WHERE secret = ?`;
+  static FindBySecret(secret) {
+    return new Promise((resolve, reject) => {
+      const sql = `SELECT * FROM icebreaker_responses WHERE secret = ?`;
 
-      db.get(sql, secret, function(err, row){
-        let response = new IceBreakerResponse(row.icebreakerID, row.questionID, row.email, row.secret);
+      db.get(sql, [ secret ], (err, row) => {
+        const response = new IceBreakerResponse(row.icebreaker_id, row.email, row.secret);
         response.id = row.id;
 
-        resolve(response)
-      })
-    })
+        resolve(response);
+      });
+    });
+  }
 
-    return query;
-  }  
-
-  constructor(icebreakerID, questionID, email, secret) {
-    this.icebreakerID = icebreakerID;
-    this.questionID = questionID;
+  constructor(iceBreakerID, email, secret) {
+    this.iceBreakerID = iceBreakerID;
     this.email = email;
     this.secret = secret;
   }
 
-  insert(){
-    db.run(`INSERT INTO icebreaker_responses (icebreakerID, questionID, email, secret) 
-      VALUES (?,?,?,?)`, this.icebreakerID, this.questionID, this.email, this.secret)
+  insert() {
+    db.run(`
+      INSERT INTO icebreaker_responses (
+        icebreaker_id,
+        email,
+        secret
+      )
+      VALUES (?, ?, ?)
+    `, [
+      this.iceBreakerID,
+      this.email,
+      this.secret
+    ]);
   }
 
-  updateResponseText(responseText){
+  updateResponseText(responseText) {
     this.responseText = responseText;
-    db.run("UPDATE icebreaker_responses SET response_text = ? WHERE id = ?", this.responseText, this.id)
-  }
 
-  question(){
-    const Question = require('./Question');
-    return Question.Find(this.questionID)
-  }
-
-  icebreaker(){
-    const IceBreaker = require('./IceBreaker');
-    return IceBreaker.Find(this.icebreakerID)
+    db.run("UPDATE icebreaker_responses SET response_text = ? WHERE id = ?", [
+      this.responseText,
+      this.id
+    ]);
   }
 }
 
-module.exports = IceBreakerResponse
+module.exports = IceBreakerResponse;

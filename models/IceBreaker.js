@@ -1,87 +1,84 @@
-let db = require("../config/db");
-let crypto = require('crypto');
+'use strict';
+
+const db = require("../config/db");
+const crypto = require('crypto');
 
 class IceBreaker {
-  static CreateTable(){
-    let sql = `
+  static CreateTable() {
+    const sql = `
       CREATE TABLE IF NOT EXISTS icebreakers (
-        id INTEGER PRIMARY KEY, 
-        questionID INTEGER,
+        id INTEGER PRIMARY KEY,
+        question_id INTEGER,
         secret TEXT
       )
-    `
+    `;
 
     return db.run(sql);
   }
 
-  static FindBySecret(secret){
-    let query = new Promise(function(resolve, reject){
-      let sql = `SELECT * FROM icebreakers WHERE secret = ?`;
+  static FindBySecret(secret) {
+    const query = new Promise((resolve, reject) => {
+      const sql = `SELECT * FROM icebreakers WHERE secret = ?`;
 
-      db.get(sql, secret, function(err, row){
-        let icebreaker = new IceBreaker(row.questionID);
-        icebreaker.id = row.id;
+      db.get(sql, secret, (err, row) => {
+        const iceBreaker = new IceBreaker(row.question_id);
+        iceBreaker.id = row.id;
 
-        resolve(icebreaker)
+        resolve(iceBreaker)
       })
     })
 
     return query;
   }
 
-  static Find(id){
-    let query = new Promise(function(resolve, reject){
-      let sql = `SELECT * FROM icebreakers WHERE id = ?`;
+  static Find(id) {
+    const query = new Promise((resolve, reject) => {
+      const sql = `SELECT * FROM icebreakers WHERE id = ?`;
 
-      db.get(sql, id, function(err, row){
-        let icebreaker = new IceBreaker(row.questionID);
-        icebreaker.id = row.id;
-        icebreaker.secret = row.secret;
-        resolve(icebreaker)
-      })
-    })
+      db.get(sql, [ id ], (err, row) => {
+        const iceBreaker = new IceBreaker(row.question_id);
+        iceBreaker.id = row.id;
+        iceBreaker.secret = row.secret;
+        resolve(iceBreaker);
+      });
+    });
 
     return query;
-  }    
+  }
 
   constructor(questionID, emails) {
     this.questionID = questionID;
     this.emails = emails;
   }
 
-  save(){
+  save() {
     const IceBreakerResponse = require('./IceBreakerResponse');
 
-    let self = this;
-    let insert = new Promise(function(resolve, reject){
-      let iceBreakerResponses = [];
-      db.serialize(function(){
-        self.secret = crypto.randomBytes(10).toString('hex')
-        db.run(`INSERT INTO icebreakers (questionID, secret) VALUES (?, ?)`, self.questionID, self.secret)
-        db.get(`SELECT last_insert_rowid() AS id FROM icebreakers`, function(err, row){
-          self.id = row.id;
-          // self.emails.forEach(function(email){
-          //   let secret = crypto.randomBytes(10).toString('hex')
-          //   let iceBreakerResponse = new IceBreakerResponse(self.id, self.questionID, email, secret)
-          //   iceBreakerResponse.insert()
-          //   iceBreakerResponses.push(iceBreakerResponse)
-          // })
-          resolve(self, iceBreakerResponses)
-        })
-      })
-    })
-    return insert;
-  }
+    return new Promise((resolve, reject) => {
+      const iceBreakerResponses = [];
 
-  responses(){
-    const IceBreakerResponse = require('./IceBreakerResponse');
-    return IceBreakerResponse.FindAllByIceBreakerID(this.id);
-  }
+      db.serialize(() => {
+        this.secret = crypto.randomBytes(10).toString('hex');
 
-  question(){
-    const Question = require('./Question');
-    return Question.Find(this.questionID)
+        db
+          .run(`INSERT INTO icebreakers (question_id, secret) VALUES (?, ?)`, [
+            this.questionID,
+            this.secret
+          ])
+          .get(`SELECT last_insert_rowid() AS id FROM icebreakers`, (err, row) => {
+            this.id = row.id;
+            this.emails.forEach(email => {
+              const secret = crypto.randomBytes(10).toString('hex')
+              const iceBreakerResponse = new IceBreakerResponse(this.id, email, secret)
+              iceBreakerResponse.insert()
+              iceBreakerResponses.push(iceBreakerResponse)
+            });
+
+            resolve(this, iceBreakerResponses);
+          });
+      });
+    });
   }
 }
 
-module.exports = IceBreaker
+module.exports = IceBreaker;

@@ -5,19 +5,19 @@
     <div class="container">
       <% include ../layout/navigation.ejs %>
 
-      <main role="main">  
+      <main role="main">
         <div class="row marketing">
           <div class="col-lg-12">
             <h4><%= question.content %></h4>
-            
-            <% icebreakerResponses.forEach(function(iceBreakerResponse){ %>
+
+            <% iceBreakerResponses.forEach(function(iceBreakerResponse) { %>
               <h4><%= iceBreakerResponse.email %></h4>
               <p><%= iceBreakerResponse.responseText %></p>
             <% }) %>
           </div>
         </div>
       </main>
-      
+
       <% include ../layout/footer.ejs %>
     </div> <!-- /container -->
   </body>
