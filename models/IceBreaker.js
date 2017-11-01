@@ -11,7 +11,7 @@ class IceBreaker {
       )
     `
 
-    db.run(sql)
+    return db.run(sql);
   }
 
   static FindBySecret(secret){
