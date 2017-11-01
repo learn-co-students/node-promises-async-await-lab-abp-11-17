@@ -31,6 +31,8 @@ Seriously how the fuck does REQUIRE work?
 
 in a console if you did Question.Find(1) you'd get a promise, how to "resolve" it in console...
 
+supervisor DEBUG=icebreaker-simple node inspect ./bin/www
+
 TODO
 
 1. Testing
