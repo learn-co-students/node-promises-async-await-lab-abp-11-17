@@ -60,12 +60,12 @@ class IceBreaker {
         db.run(`INSERT INTO icebreakers (questionID, secret) VALUES (?, ?)`, self.questionID, self.secret)
         db.get(`SELECT last_insert_rowid() AS id FROM icebreakers`, function(err, row){
           self.id = row.id;
-          self.emails.forEach(function(email){
-            let secret = crypto.randomBytes(10).toString('hex')
-            let iceBreakerResponse = new IceBreakerResponse(self.id, self.questionID, email, secret)
-            iceBreakerResponse.insert()
-            iceBreakerResponses.push(iceBreakerResponse)
-          })
+          // self.emails.forEach(function(email){
+          //   let secret = crypto.randomBytes(10).toString('hex')
+          //   let iceBreakerResponse = new IceBreakerResponse(self.id, self.questionID, email, secret)
+          //   iceBreakerResponse.insert()
+          //   iceBreakerResponses.push(iceBreakerResponse)
+          // })
           resolve(self, iceBreakerResponses)
         })
       })
