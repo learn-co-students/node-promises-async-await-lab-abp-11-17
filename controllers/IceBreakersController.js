@@ -15,11 +15,12 @@ IceBreakersController.New = async function (req, res, next) {
 
 IceBreakersController.Create = async function (req, res, next) {
   const question = await Question.Find(req.query.questionID);
-  const iceBreaker = new IceBreaker(question.id, req.body.icebreakerEmails);
+  const iceBreaker = new IceBreaker(question.id);
+  const savedIceBreaker = await iceBreaker.save();
 
-  await iceBreaker.save();
+  await IceBreakerResponse.BatchCreate(savedIceBreaker.id, req.body.iceBreakerEmails);
 
-  res.redirect(`/icebreakers?secret=${ iceBreaker.secret }`);
+  res.redirect(`/icebreakers?secret=${ savedIceBreaker.secret }`);
 };
 
 IceBreakersController.Show = async function (req, res, next) {

@@ -16,7 +16,10 @@ class Question {
 
   static All() {
     return new Promise((resolve, reject) => {
-      const sql = `SELECT * FROM questions`;
+      const sql = `
+        SELECT *
+        FROM questions
+      `;
 
       db.all(sql, [], (err, rows) => {
         const results = rows.map(row => {
@@ -33,7 +36,11 @@ class Question {
 
   static Find(id) {
     return new Promise((resolve, reject) => {
-      const sql = `SELECT * FROM questions WHERE id = ?`;
+      const sql = `
+        SELECT *
+        FROM questions
+        WHERE id = ?
+      `;
 
       db.get(sql, [ id ], (err, row) => {
         const question = new Question(row.content);
@@ -49,7 +56,13 @@ class Question {
   }
 
   save() {
-    db.run(`INSERT INTO questions (content) VALUES (?)`, [ this.content ]);
+    db.run(`
+      INSERT INTO questions (
+        content
+      ) VALUES (?)
+    `, [
+      this.content
+    ]);
   }
 }
 

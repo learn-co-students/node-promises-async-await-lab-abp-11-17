@@ -17,23 +17,30 @@ class IceBreaker {
   }
 
   static FindBySecret(secret) {
-    const query = new Promise((resolve, reject) => {
-      const sql = `SELECT * FROM icebreakers WHERE secret = ?`;
+    return new Promise((resolve, reject) => {
+      const sql = `
+        SELECT *
+        FROM icebreakers
+        WHERE secret = ?
+      `;
 
-      db.get(sql, secret, (err, row) => {
+      db.get(sql, [ secret ], (err, row) => {
         const iceBreaker = new IceBreaker(row.question_id);
+        iceBreaker.secret = row.secret;
         iceBreaker.id = row.id;
 
-        resolve(iceBreaker)
-      })
-    })
-
-    return query;
+        resolve(iceBreaker);
+      });
+    });
   }
 
   static Find(id) {
-    const query = new Promise((resolve, reject) => {
-      const sql = `SELECT * FROM icebreakers WHERE id = ?`;
+    return new Promise((resolve, reject) => {
+      const sql = `
+        SELECT *
+        FROM icebreakers
+        WHERE id = ?
+      `;
 
       db.get(sql, [ id ], (err, row) => {
         const iceBreaker = new IceBreaker(row.question_id);
@@ -42,41 +49,37 @@ class IceBreaker {
         resolve(iceBreaker);
       });
     });
-
-    return query;
   }
 
-  constructor(questionID, emails) {
+  constructor(questionID) {
     this.questionID = questionID;
-    this.emails = emails;
   }
 
   save() {
-    const IceBreakerResponse = require('./IceBreakerResponse');
+    this.secret = crypto.randomBytes(10).toString('hex');
 
     return new Promise((resolve, reject) => {
-      const iceBreakerResponses = [];
+      db
+        .run(`
+          INSERT INTO icebreakers (
+            question_id,
+            secret
+          ) VALUES (?, ?)
+        `, [
+          this.questionID,
+          this.secret
+        ])
+        .get(`
+          SELECT *
+          FROM icebreakers
+          WHERE id = last_insert_rowid()
+        `, [], (err, row) => {
+          if (err) reject(err);
 
-      db.serialize(() => {
-        this.secret = crypto.randomBytes(10).toString('hex');
+          this.id = row.id;
 
-        db
-          .run(`INSERT INTO icebreakers (question_id, secret) VALUES (?, ?)`, [
-            this.questionID,
-            this.secret
-          ])
-          .get(`SELECT last_insert_rowid() AS id FROM icebreakers`, (err, row) => {
-            this.id = row.id;
-            this.emails.forEach(email => {
-              const secret = crypto.randomBytes(10).toString('hex')
-              const iceBreakerResponse = new IceBreakerResponse(this.id, email, secret)
-              iceBreakerResponse.insert()
-              iceBreakerResponses.push(iceBreakerResponse)
-            });
-
-            resolve(this, iceBreakerResponses);
-          });
-      });
+          resolve(this);
+        });
     });
   }
 }

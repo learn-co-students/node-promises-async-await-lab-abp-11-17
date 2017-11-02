@@ -1,6 +1,7 @@
 'use strict';
 
 const db = require("../config/db");
+const crypto = require('crypto');
 
 class IceBreakerResponse {
   static CreateTable() {
@@ -18,11 +19,30 @@ class IceBreakerResponse {
     return db.run(sql);
   }
 
+  static BatchCreate(iceBreakerID, emails) {
+    return new Promise((resolve, reject) => {
+      const responses = emails.map(email => {
+        const secret = crypto.randomBytes(10).toString('hex');
+        const response = new IceBreakerResponse(iceBreakerID, email, secret);
+
+        response.insert();
+
+        return response;
+      });
+
+      resolve(responses);
+    });
+  }
+
   static FindAllByIceBreakerID(iceBreakerID) {
     return new Promise((resolve, reject) => {
-      const sql = `SELECT * FROM icebreaker_responses WHERE icebreaker_id = ?`;
+      const sql = `
+        SELECT *
+        FROM icebreaker_responses
+        WHERE icebreaker_id = ?
+      `;
 
-      db.all(sql, iceBreakerID, (err, rows) => {
+      db.all(sql, [ iceBreakerID ], (err, rows) => {
         const results = rows.map(row => {
           const response = new IceBreakerResponse(row.icebreaker_id, row.email, row.secret);
           response.id = row.id;
@@ -37,7 +57,11 @@ class IceBreakerResponse {
 
   static FindBySecret(secret) {
     return new Promise((resolve, reject) => {
-      const sql = `SELECT * FROM icebreaker_responses WHERE secret = ?`;
+      const sql = `
+        SELECT *
+        FROM icebreaker_responses
+        WHERE secret = ?
+      `;
 
       db.get(sql, [ secret ], (err, row) => {
         const response = new IceBreakerResponse(row.icebreaker_id, row.email, row.secret);
@@ -72,7 +96,11 @@ class IceBreakerResponse {
   updateResponseText(responseText) {
     this.responseText = responseText;
 
-    db.run("UPDATE icebreaker_responses SET response_text = ? WHERE id = ?", [
+    db.run(`
+      UPDATE icebreaker_responses
+      SET response_text = ?
+      WHERE id = ?
+    `, [
       this.responseText,
       this.id
     ]);
