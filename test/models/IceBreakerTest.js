@@ -129,6 +129,12 @@ describe('IceBreaker', () => {
         await resetDB();
       });
 
+      it('exists', () => {
+        const iceBreaker = new IceBreaker(6789);
+
+        expect(iceBreaker.save).to.be.a('function');
+      });
+
       it("persists itself to the 'icebreakers' database", async () => {
         const iceBreaker = new IceBreaker(6789);
 

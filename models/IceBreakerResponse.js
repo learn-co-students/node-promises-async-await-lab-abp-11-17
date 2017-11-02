@@ -79,7 +79,7 @@ class IceBreakerResponse {
   }
 
   insert() {
-    db.run(`
+    return db.run(`
       INSERT INTO icebreaker_responses (
         icebreaker_id,
         email,
