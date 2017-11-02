@@ -8,7 +8,7 @@ const db = require('../../config/db');
 
 const IceBreaker = require('../../models/IceBreaker');
 
-const createTable = () => new Promise((resolve, reject) => db.get('CREATE TABLE IF NOT EXISTS icebreakers ( id INTEGER PRIMARY KEY, questionID INTEGER, secret TEXT )', [], (err, row) => err ? reject(err) : resolve(row)));
+const createTable = () => new Promise((resolve, reject) => db.get('CREATE TABLE IF NOT EXISTS icebreakers ( id INTEGER PRIMARY KEY, question_id INTEGER, secret TEXT )', [], (err, row) => err ? reject(err) : resolve(row)));
 
 const getTables = () => new Promise((resolve, reject) => {
   db.all("SELECT name FROM sqlite_master WHERE type = 'table'", [], (err, rows) => {
@@ -22,7 +22,7 @@ const getTableInfo = tableName => new Promise((resolve, reject) => {
   });
 });
 
-const createDummyIceBreaker = (questionID, secret) => new Promise((resolve, reject) => db.get("INSERT INTO icebreakers (questionID, secret) VALUES (?, ?)", [ questionID, secret ], (err, row) => err ? reject(err) : resolve(row)));
+const createDummyIceBreaker = (questionID, secret) => new Promise((resolve, reject) => db.get("INSERT INTO icebreakers (question_id, secret) VALUES (?, ?)", [ questionID, secret ], (err, row) => err ? reject(err) : resolve(row)));
 
 const seedDB = () => Promise.all([
   createDummyIceBreaker(1234, 'abcd'),
@@ -55,18 +55,18 @@ describe('IceBreaker', () => {
         expect(tables[0].name).to.eq('icebreakers');
       });
 
-      it("adds 'id', 'questionID', and 'secret' columns to the 'icebreakers' table", async () => {
+      it("adds 'id', 'question_id', and 'secret' columns to the 'icebreakers' table", async () => {
         await IceBreaker.CreateTable();
 
         const { sql } = await getTableInfo('icebreakers');
 
         const idFieldExists = sql.indexOf('id INTEGER PRIMARY KEY') > -1;
-        const questionIDFieldExists = sql.indexOf('questionID INTEGER') > -1;
+        const question_idFieldExists = sql.indexOf('question_id INTEGER') > -1;
         const secretFieldExists = sql.indexOf('secret TEXT') > -1;
 
-        expect(idFieldExists).to.eq(true);
-        expect(questionIDFieldExists).to.eq(true);
-        expect(secretFieldExists).to.eq(true);
+        expect(idFieldExists, "'icebreakers' table is missing an 'id' field with type 'INTEGER' and modifier 'PRIMARY KEY'").to.eq(true);
+        expect(question_idFieldExists, "'icebreakers' table is missing a 'question_id' field with type 'INTEGER'").to.eq(true);
+        expect(secretFieldExists, "'icebreakers' table is missing a 'secret' field with type 'TEXT'").to.eq(true);
       });
     });
 
@@ -114,11 +114,10 @@ describe('IceBreaker', () => {
   });
 
   describe('as an object', () => {
-    it("sets the 'questionID' and 'emails' attributes when initializing a new object", () => {
-      const iceBreaker = new IceBreaker(1234, [ 'avi@flatironschool.com', 'joe@flatironschool.com' ]);
+    it("sets the 'questionID' attribute when initializing a new object", () => {
+      const iceBreaker = new IceBreaker(1234);
 
       expect(iceBreaker.questionID).to.eq(1234);
-      expect(iceBreaker.emails[1]).to.eq('joe@flatironschool.com');
     });
 
     describe('#save()', () => {
@@ -131,7 +130,7 @@ describe('IceBreaker', () => {
       });
 
       it("persists itself to the 'icebreakers' database", async () => {
-        const iceBreaker = new IceBreaker(6789, [ 'avi@flatironschool.com', 'joe@flatironschool.com' ]);
+        const iceBreaker = new IceBreaker(6789);
 
         const savedIceBreaker = await iceBreaker.save();
 
