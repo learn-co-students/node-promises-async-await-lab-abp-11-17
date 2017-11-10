@@ -15,14 +15,14 @@ class Question {
   }
 
   static All() {
-    return new Promise((resolve, reject) => {
+    return new Promise(function(resolve, reject){
       const sql = `
         SELECT *
         FROM questions
       `;
 
-      db.all(sql, [], (err, rows) => {
-        const results = rows.map(row => {
+      db.all(sql, function(err, rows){
+        const results = rows.map(function(row){
           const question = new Question(row.content);
           question.id = row.id;
 
@@ -56,13 +56,25 @@ class Question {
   }
 
   save() {
-    db.run(`
-      INSERT INTO questions (
-        content
-      ) VALUES (?)
-    `, [
-      this.content
-    ]);
+    return new Promise((resolve, reject) => {
+      db.run(`
+        INSERT INTO questions (
+          content
+        ) VALUES (?)
+      `, [
+        this.content
+      ]).get(`
+        SELECT *
+        FROM questions
+        WHERE id = last_insert_rowid()
+      `, [], (err, row) => {
+        if (err) reject(err);
+
+        this.id = row.id;
+
+        resolve(this);
+      });
+    });
   }
 }
 
