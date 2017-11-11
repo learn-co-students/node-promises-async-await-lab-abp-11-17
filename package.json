@@ -9,8 +9,7 @@
   "dependencies": {
     "debug": "~2.6.9",
     "mocha-multi": "^0.11.1",
-    "pryjs": "^1.0.3",
-    "sqlite3": "^3.1.13"
+    "pryjs": "^1.0.3"
   },
   "devDependencies": {
     "chai": "^4.1.2",
