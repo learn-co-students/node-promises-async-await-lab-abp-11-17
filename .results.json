@@ -1,0 +1,60 @@
+{
+  "stats": {
+    "suites": 2,
+    "tests": 3,
+    "passes": 3,
+    "pending": 0,
+    "failures": 0,
+    "start": "2017-11-13T23:08:21.278Z",
+    "end": "2017-11-13T23:08:21.284Z",
+    "duration": 6
+  },
+  "tests": [
+    {
+      "title": "is exported into modules so it can be loaded here",
+      "fullTitle": "Icebreaker is exported into modules so it can be loaded here",
+      "duration": 1,
+      "currentRetry": 0,
+      "err": {}
+    },
+    {
+      "title": "requires('./Question.js')",
+      "fullTitle": "Icebreaker requires('./Question.js')",
+      "duration": 0,
+      "currentRetry": 0,
+      "err": {}
+    },
+    {
+      "title": "is exported into modules so it can be loaded here",
+      "fullTitle": "Question is exported into modules so it can be loaded here",
+      "duration": 0,
+      "currentRetry": 0,
+      "err": {}
+    }
+  ],
+  "pending": [],
+  "failures": [],
+  "passes": [
+    {
+      "title": "is exported into modules so it can be loaded here",
+      "fullTitle": "Icebreaker is exported into modules so it can be loaded here",
+      "duration": 1,
+      "currentRetry": 0,
+      "err": {}
+    },
+    {
+      "title": "requires('./Question.js')",
+      "fullTitle": "Icebreaker requires('./Question.js')",
+      "duration": 0,
+      "currentRetry": 0,
+      "err": {}
+    },
+    {
+      "title": "is exported into modules so it can be loaded here",
+      "fullTitle": "Question is exported into modules so it can be loaded here",
+      "duration": 0,
+      "currentRetry": 0,
+      "err": {}
+    }
+  ]
+}

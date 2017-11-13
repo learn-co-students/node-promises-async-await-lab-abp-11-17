@@ -1,10 +1,9 @@
 {
-  "name": "js-orm-migration",
+  "name": "node-module-exports-lab",
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/console",
-    "test": "./node_modules/.bin/mocha"
+    "test": "mocha -R mocha-multi --reporter-options spec=-,json=.results.json"
   },
   "dependencies": {
     "debug": "~2.6.9",
