@@ -1,9 +1,9 @@
-# Module Exports in Node Lab
+# Node Promises with Async Await FIXME Lab
 
 ## Objectives
 
-1. Export an object through `module.exports`
-2. Require an object through `require`
+1. 
+2. 
 
 ## Instructions
 
