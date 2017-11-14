@@ -41,12 +41,12 @@ describe('Question', () => {
     it("returns the question with await/async", async function(){
       const question = await Question.Find(1)
 
-      expect(question).to.eql(Question._All[0], "HINT: Are you returning a promise that has a resolve?")
+      expect(question).to.eql(Question._All[0], "HINT: Are you returning a promise that has a resolve?\n")
     })
   })
   describe("Question.Print(id)", function(){
     it('is an async function', function(){
-      expect(Question.Print.constructor.name).to.eq('AsyncFunction', "HINT: Did you declare Print to be an static async function?")
+      expect(Question.Print.constructor.name).to.eq('AsyncFunction', "HINT: Did you declare Print to be a static async function?\n")
     })
   })  
 });
