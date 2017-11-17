@@ -1,4 +1,4 @@
-const Question = require("./models/Question")
+const Question = require('./models/Question');
 
-console.log("Printing all questions...")
-Question.PrintAll()
+console.log('Printing all questions...');
+Question.PrintAll();
