@@ -30,18 +30,18 @@ class Question {
   static Find(id){
     console.log(`Waiting for Question ${id} to load...`)
 
-      setTimeout(function(){
-        const question = Question._All[id-1] // Do Not Edit
-        console.log(`...Question ${id} Loaded`) // Do Not Edit
-
-        return question
-      }, 1500)
-
+      return new Promise(function(resolve){
+        setTimeout(function(){
+          const question = Question._All[id-1] // Do Not Edit
+          console.log(`...Question ${id} Loaded`) // Do Not Edit
+          resolve (question);
+        }, 1500)
+    })
   }
 
   // FIXME: Implement async / await
-  static Print(id){
-    const question = Question.Find(id)
+  static async Print(id){
+    const question = await Question.Find(id);
 
     console.log("\n")
     console.log(question.content)
@@ -49,10 +49,13 @@ class Question {
   }
 }
 
+
 Question._All = [
   new Question("Where in the world is Carmen Sandiego?"),
   new Question("What's your favorite TV Show?"),
   new Question("What superpower would you want?")
 ]
+
+
 
 module.exports = Question
