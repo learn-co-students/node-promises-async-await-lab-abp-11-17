@@ -44,9 +44,7 @@ class Question {
     const question = await Question.Find(id)
 
     console.log("\n")
-    question.forEach(function(question){
     console.log(question.content)
-  })
     console.log("\n")
   }
 }
