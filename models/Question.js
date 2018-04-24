@@ -51,7 +51,8 @@ return new Promise(function(resolve){
 
     console.log("\n")
     console.log(question.content)
-
+}
+}
 
 
 
