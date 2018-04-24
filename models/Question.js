@@ -40,7 +40,7 @@ return new Promise(function(resolve){
       }, 1500)
 
   })
-})
+}
 }
 
   // FIXME: Implement async / await
