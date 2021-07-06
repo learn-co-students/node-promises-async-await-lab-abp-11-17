@@ -5,7 +5,7 @@ const { expect } = require('chai');
 const Question = require('../../models/Question.js');
 
 describe('Question', () => {
-  beforeEach(function(){    
+  beforeEach(function(){
     Question._All = [
       new Question("Where in the world is Carmen Sandiego?"),
       new Question("What's your favorite TV Show?"),
@@ -42,12 +42,12 @@ describe('Question', () => {
       const question = await Question.Find(1)
 
       expect(question).to.eql(Question._All[0], "HINT: Are you returning a promise that has a resolve?\n")
+      done()
     })
   })
   describe("Question.Print(id)", function(){
     it('is an async function', function(){
       expect(Question.Print.constructor.name).to.eq('AsyncFunction', "HINT: Did you declare Print to be a static async function?\n")
     })
-  })  
+  })
 });
-
