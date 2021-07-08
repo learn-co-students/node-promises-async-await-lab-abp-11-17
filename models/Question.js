@@ -30,22 +30,27 @@ class Question {
   static Find(id){
     console.log(`Waiting for Question ${id} to load...`)
 
+    return new Promise(function(resolve){
       setTimeout(function(){
         const question = Question._All[id-1] // Do Not Edit
         console.log(`...Question ${id} Loaded`) // Do Not Edit
-
-        return question
+        // We don't return in a promise, we resolve
+        // return question
+        resolve (question)
       }, 1500)
 
+    })
   }
 
   // FIXME: Implement async / await
-  static Print(id){
-    const question = Question.Find(id)
-
-    console.log("\n")
+  static async Print(id){
+    // Find the question
+    const question = await Question.Find(id)
+    // Print it
     console.log(question.content)
-    console.log("\n")
+
+    // Calling Print within Print doesn't feel write...
+    //static async Print(id){
   }
 }
 
